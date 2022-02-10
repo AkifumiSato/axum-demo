@@ -75,12 +75,10 @@ mod test {
 
     #[tokio::test]
     async fn should_return_hello_world() {
-        let listener = TcpListener::bind("127.0.0.1:8000".parse::<SocketAddr>().unwrap()).unwrap();
-        let addr = listener.local_addr().unwrap();
+        let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
 
         tokio::spawn(async move {
-            axum::Server::from_tcp(listener)
-                .unwrap()
+            axum::Server::bind(&addr)
                 .serve(create_route().into_make_service())
                 .await
                 .expect("unexpected server error");
